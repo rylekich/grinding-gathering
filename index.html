@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.jsdelivr.net/gh/alvinashiatey/Sheets@latest/dist/sheets.umd.min.js"></script>
+    <title>Sheet Pages Tutorial</title>
+    <style>
+      div.page{
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+      }
+
+      img {
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page"></div>
+      <script>
+        // the class Sheet is from the fetched sheets.umd.min.js
+      const sheetID = "1V3MDxwb-tUoMiiyp8PWNrOiEGZmww1RXWsqsm6jKYLA";
+      const page = document.querySelector(".page");  
+      const sheet = new Sheets(sheetID);
+
+      sheet.getMyData().then(function (data){
+        console.log(data);
+
+        // const contributor = document.createElement("p");
+        // contributor.innerText = data["Contributor"];
+        // page.appendChild(contributor);
+
+        // const description = document.createElement("p")
+        // description.innerText = data["Meta-Description"];
+        // page.appendChild(description);
+        
+        const collapsedRows = sheet.collapseKeys(
+          "UL-Date",
+          "UL-Images",
+          "Contributor",
+          "Materials",
+          "Purpose",
+          "Ingredients"
+        );
+        
+        const ul = document.createElement("ul");
+        for (const row of collapsedRows) {
+          sheet.createElement({
+            tag: "div",
+            className: "entry",
+            children: [
+                  {tag: "h2", content: row["Contributor"]},
+                  {tag: "p", content: row["UL-Date"]},
+                  {tag: "img", attributes: {
+                    src: row["UL-Images"],
+                  },
+                  },
+                  {tag: "p", content: row["Materials"]},
+                  {tag: "p", content: row["Purpose"]},
+                  {tag: "p", content: row["Ingredients"]},
+            ],
+          })
+          .appendTo(".page");
+        }
+
+        
+        // for (let date of data["UL-Date"]){
+        //   const p = document.createElement("p");
+        //   p.innerText = date;
+        //   page.appendChild(p);
+        // }
+      });
+      </script>
+        </body>
+</html>
